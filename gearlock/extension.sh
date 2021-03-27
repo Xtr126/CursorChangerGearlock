@@ -150,7 +150,7 @@ sleep 0.05
 done
 ) |
 
-dialog "$@" --gauge "Hi, thanks" 11 45 0; sleep 0.5
+dialog "$@" --gauge "Hi, thanks" 11 50 0; sleep 0.5
 check
 }
 
