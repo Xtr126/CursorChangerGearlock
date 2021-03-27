@@ -1,5 +1,4 @@
 #!/gearlock/bin/bash
-DEPDIR=/mnt/c/Users/hp/Desktop/x/CursorChanger/gearlock/dependencies
 filesdir="$DEPDIR/cursorpack"
 
 
