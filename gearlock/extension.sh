@@ -1,9 +1,6 @@
 #!/gearlock/bin/bash
 filesdir="$DEPDIR/cursorpack"
 
-
-
-
 function Cursor() {
 		
 		dialog --title "Applying cursor" --clear --msgbox "Ready to patch /system/framework/framework-res.apk with new cursor from $PWD \nPress enter to start the process or press ctrl+c twice to cancel" 10 60
@@ -119,13 +116,8 @@ function Lightning() {
 	elif [ $Return = 3 ]; then
     exit
 	fi
-	dialog --yesno --yes-label "Add cursors" --no-label "Update from internet" "Do you want to download the following?
-1.Etch Droid
-2.LuckyPatcher
-3.RootUninstaller
-4.Terminal-Emulator 
-" 10 45
- 
+	dialog --title "Add nice cursors" --yes-label "Add cursors" --no-label "Update from internet"  --yesno "You can add cursors from local file or fetch latest cursor list from github Xtr126/CursorChangerGearlock
+	Only png format supported. Must be connected to the internet for update to work. Consider supporting the development by giving me nice cursors if you have some"  10 60 
 }
 
 function Loader() {
