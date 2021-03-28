@@ -11,10 +11,10 @@ check_compat 7.2.22
 # Ensure compatible GearLock version
 
 geco "==== Cursor pack by Xtr, \n
-Special Thanks to my friends at supreme-gamers.com discord server (Android-x86 community) who supported in the creation of this\n
-Lolify/manky201 gave me 2 cursor\n
-NM AKSHAR Gave me 8 cursors\n
+Special Thanks to my friends who supported in the creation of this\n
+
+NM AKSHAR Gave me 7 cursors\n
 Devplayz gave 6 cursors
-LIGHTNING gave me 4 cursors\n
+LIGHTNING283 gave me 4 cursors\n
 ==== Use it from gearlock> run gearlock extensions\n
 ==== Use it from gearlock extensions menu after installation, enjoy!"
