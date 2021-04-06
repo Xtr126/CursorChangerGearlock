@@ -1,4 +1,5 @@
 #!/gearlock/bin/bash
+
 filesdir="$DEPDIR/cursorpack"
 
 function Cursor() {
@@ -118,6 +119,21 @@ function Lightning() {
 	fi
 	dialog --title "Add nice cursors" --yes-label "Add cursors" --no-label "Update from internet"  --yesno "You can add cursors from local file or fetch latest cursor list from github Xtr126/CursorChangerGearlock
 	Only png format supported. Must be connected to the internet for update to work. Consider supporting the development by giving me nice cursors if you have some"  10 60 
+	case $? in 
+            0)File_browser;;
+			
+			1)Updater;;
+			
+			*)Loader;;
+	esac
+			
+}
+function Updater() {
+echo update
+}
+
+function File_browser() {
+echo file
 }
 
 function Loader() {
@@ -134,7 +150,7 @@ $PCT
 │ ┃ ‎ ┃ ┃‎┃━┃ ┗━━ ┃ ┃‎┃━┃ ‎ ┃━┛ ┃━┃ ┃ ‎ ┃/
 │ ┗━━‎╹━╹‎┃ \ ━━╹ ┗━┛‎┃ \\ ‎ ┃ ‎ ┃ ┃ ┗━━ ┃⟍⟍
 └──────────────────────────────────────────┘
-. . . . . . . Made by: Xtr126 //
+. . Xtr LIGHTNING ilhan NM_AKSHAR Devplayz  //
 XXX
 EOF
 PCT=`expr $PCT + 5`

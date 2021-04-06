@@ -12,7 +12,7 @@ check_compat 7.2.22
 
 geco "==== Cursor pack by Xtr, \n
 Special Thanks to my friends who supported in the creation of this\n
-
+Download previous version for boot animations, only cursors are in this, to make it lightweight
 NM AKSHAR Gave me 7 cursors\n
 Devplayz gave 6 cursors
 LIGHTNING283 gave me 4 cursors\n
