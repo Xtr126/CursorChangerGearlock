@@ -1,8 +1,6 @@
-startdir=/sdcard
+startdir=/home/xtr
 filext='.png'
 menutitle="Cursor $filext Selection Menu"
-DEPDIR="/mnt/c/Users/hp/Desktop/x/CursorChangerGearlock/gearlock/dependencies"
-filesdir="$DEPDIR/cursorpack"
 
 #------------------------------------------------------------------------------
 function Filebrowser()
@@ -80,7 +78,6 @@ if [ $exitstatus -eq 0 ]; then
 		let i=$i+1
 		OPTIONS+=("$line" $i)
 		done < <( ls $filesdir/evolution/ )
-		echo "${OPTIONS[@]}"; sleep 5
 		TITLE="Which type of cursor is this?"
 		MENU="21 types of cursors available, choose what you want"
 		CHOICE=$(dialog --clear --cancel-label "Exit" \
@@ -91,8 +88,7 @@ if [ $exitstatus -eq 0 ]; then
     	 if (dialog --yes-label "Add" --no-label "Try" --yesno \
 		 	"Do you want to add the cursor to the cursor selection menu or try the cursor for now?" 7 45); then
 		 	user_input=$(dialog --title "Enter name" --inputbox \
-		 	"Enter the name to be displayed in cursor selection menu" 7 45 3>&2 2>&1 1>&3)
-		 	echo "$user_input"; sleep 5
+		 	"Enter the name to be displayed in cursor selection menu" 9 45 3>&2 2>&1 1>&3)
 		 	mkdir $filesdir/"$user_input"
 		 	cat $filepath/$filename > $filesdir/"$user_input"/$CHOICE
 		 	Loader
