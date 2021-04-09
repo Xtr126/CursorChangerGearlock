@@ -118,23 +118,28 @@ function Lightning() {
 	                $HEIGHT $WIDTH $CHOICE_HEIGHT \
 					Backup "current cursor" \
 					Restore "backup" \
-					"${W[@]}" 3>&2 2>&1 1>&3)
+					"${W[@]}" 3>&2 2>&1 1>&3); RETX=$?
+				
+	
 					
-				case $? in
-				    0)
-					cd $filesdir
-					cname="$(ls -1 $PWD | sed -n "$CHOICE p")"
-					cd "$(readlink -f "$cname")"
-					Cursor
+				case $RETX in
+				    0)case $CHOICE in 
+						Backup)Backup;;	
+						Restore)Restore;;
+						*)
+							cd $filesdir
+							cname="$(ls -1 $PWD | sed -n "$CHOICE p")"
+							cd "$(readlink -f "$cname")"
+							Cursor
+						;;
+					esac
 				    ;;
 					
 					3)exit;;
+				    
 				esac
-		case $CHOICE in 
-            Backup)Backup;;	
-			Restore)Restore;;
-		esac
-	
+
+
 	
 	 if (dialog --title "Add nice cursors" --yes-label "Add cursors" --no-label "Update from internet"  --yesno "You can add cursors from local file or fetch latest cursor list from github Xtr126/CursorChangerGearlock
 	Only png format supported. Must be connected to the internet for update to work." 9 55); then
