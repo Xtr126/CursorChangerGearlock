@@ -4,20 +4,29 @@ filesdir="$DEPDIR/cursorpack"
 
 function Cursor() {
 		
-		dialog --title "Applying cursor" --clear --msgbox "Ready to patch /system/framework/framework-res.apk with new cursor from $PWD \nPress enter to start the process or press ctrl+c twice to cancel" 10 60
+		dialog --title "Applying cursor" --clear --msgbox \
+		"Ready to patch /system/framework/framework-res.apk with new cursor from $PWD
+		Press enter to start the process or press ctrl+c twice to cancel" 10 60
 		# framework-res upgrade		
-		(pv -n /system/framework/framework-res.apk > /sdcard/framework-res.apk) 2>&1 | dialog --title "Preparing system framework" --gauge "Making a copy of /system/framework/framework-res.apk" 8 60; sleep 1
+		(pv -n /system/framework/framework-res.apk > /sdcard/framework-res.apk) 2>&1 | \
+		dialog --title "Preparing system framework" --gauge \
+		"Making a copy of /system/framework/framework-res.apk" 8 60; sleep 1
 		Pcp; sleep 1
 		cd /sdcard/
-		7z a framework-res.apk res/ | dialog --title "Cursor installation" --progressbox "Patching framework-res.apk with new cursors" 15 60; sleep 2
-		(pv -n framework-res.apk > /system/framework/framework-res.apk) 2>&1 | dialog --title "Cursor installation" --gauge "Installing patched system framework" 7 45; sleep 1
+		7z a framework-res.apk res/ | \
+		dialog --title "Cursor installation" \
+		--progressbox "Patching framework-res.apk with new cursors" 15 60
+		sleep 2
+		(pv -n framework-res.apk > /system/framework/framework-res.apk) 2>&1 | \
+		dialog --title "Cursor installation" --gauge \
+		"Installing patched system framework" 7 45; sleep 1
 		chmod 644 /system/framework/framework-res.apk  
 		stop; start
 		Loader
 }
 
 function Pcp() {
-DIRS=(*)
+DIRS=( $(ls) )
 DEST="/sdcard/res/drawable-mdpi-v4/"
 [ ! -d $DEST ] && mkdir -p $DEST
 
@@ -47,9 +56,9 @@ function Restore() {
 
 		dialog --title "Restoring" --clear --msgbox "Restoring backup, make sure you had an backup" 7 45
 		# Backup boot animation
-		[ ! -f $filesdir/cursor.backup ] && dialog --msgbox "Lol you suck, you dont have an backup, you could have broke your system in old versions of the cursor pack if you tried to restore backup without having a backup.\nChoose backup from the menu first!" 10 50 && Loader
+		[ ! -f /data/cursor.backup ] && dialog --msgbox "Lol you suck, you dont have an backup, you could have broke your system in old versions of the cursor pack if you tried to restore backup without having a backup.\nChoose backup from the menu first!" 10 50 && Loader
 		
-				cat $filesdir/cursor.backup > /system/framework/framework-res.apk
+				cat /data/cursor.backup > /system/framework/framework-res.apk
 				chmod 644 /system/framework/framework-res.apk
 				stop; start
 			Loader
@@ -61,7 +70,7 @@ function Backup() {
 
 		dialog --title "Backup" --clear --msgbox "Saving current boot animation and cursor" 7 45
 		# Backup cursor
-		cat /system/framework/framework-res.apk > $filesdir/cursor.backup
+		cat /system/framework/framework-res.apk > /data/cursor.backup
 		Loader
 		
 }
@@ -93,7 +102,7 @@ function Lightning() {
 	TITLE="Scroll down to see all cursors"
 	MENU="Made by Xtr, some cursors given by 
 	DevPlayz,NM-AKSHAR,Lightning"
-    W=($(ls $filesdir | grep -v 'cursor.backup' | nl)) 
+    W=($(ls $filesdir | nl)) 
 	CHOICE=$(dialog --clear --cancel-label "Exit" \
 	                --backtitle "$BACKTITLE" \
 	                --title "$TITLE" \
@@ -102,39 +111,41 @@ function Lightning() {
 					--cancel-label "$CANCEL" \
 	                --menu "$MENU" \
 	                $HEIGHT $WIDTH $CHOICE_HEIGHT \
+					Backup "current cursor" \
+					Restore "backup" \
 					"${W[@]}" 3>&2 2>&1 1>&3); Return=$?
-	if [ $Return = 0 ]; then 
-        cd $filesdir
-		cname="$(ls -1 $PWD | grep -v 'cursor.backup' | sed -n "$CHOICE p")"
-		if echo "$cname" | grep -iq restore; then
-		Restore
-		elif echo "$cname" | grep -iq backup; then
-		Backup
-		else
-		cd "$(readlink -f "$cname")"
-		Cursor
-        fi
-	elif [ $Return = 3 ]; then
-    exit
+		case $CHOICE in 
+            Backup)Backup;;	
+			Restore)Restore;;
+			
+			*)
+				case $Return in
+				    0)
+					cd $filesdir
+					cname="$(ls -1 $PWD | grep -v 'cursor.backup' | sed -n "$CHOICE p")"
+					cd "$(readlink -f "$cname")"
+					Cursor
+				    ;;
+					
+					3)exit;;
+				esac
+			;;
+		esac
+	
+	
+	 if (dialog --title "Add nice cursors" --yes-label "Add cursors" --no-label "Update from internet"  --yesno "You can add cursors from local file or fetch latest cursor list from github Xtr126/CursorChangerGearlock
+	Only png format supported. Must be connected to the internet for update to work." 9 55); then
+	source $DEPDIR/filebrowse.sh
+	else
+	Updater
 	fi
-	dialog --title "Add nice cursors" --yes-label "Add cursors" --no-label "Update from internet"  --yesno "You can add cursors from local file or fetch latest cursor list from github Xtr126/CursorChangerGearlock
-	Only png format supported. Must be connected to the internet for update to work. Consider supporting the development by giving me nice cursors if you have some"  10 60 
-	case $? in 
-            0)File_browser;;
-			
-			1)Updater;;
-			
-			*)Loader;;
-	esac
-			
-}
-function Updater() {
-echo update
+    Loader
 }
 
-function File_browser() {
-echo file
+function Updater() {
+dialog --msgbox "Go to https://github.com/Xtr126/CursorChangerGearlock" 7 45
 }
+
 
 function Loader() {
 
@@ -161,5 +172,7 @@ done
 dialog "$@" --gauge "Hi, thanks" 11 50 0; sleep 0.5
 check
 }
+
+
 
 Loader
