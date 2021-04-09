@@ -102,7 +102,12 @@ function Lightning() {
 	TITLE="Scroll down to see all cursors"
 	MENU="Made by Xtr, some cursors given by 
 	DevPlayz,NM-AKSHAR,Lightning"
-    W=($(ls $filesdir | nl)) 
+    let i=0 # define counting variable
+	W=() # define working array
+	while read -r line; do # process file by file
+    let i=$i+1
+    W+=($i "$line")
+	done < <( ls $filesdir )
 	CHOICE=$(dialog --clear --cancel-label "Exit" \
 	                --backtitle "$BACKTITLE" \
 	                --title "$TITLE" \
@@ -113,23 +118,21 @@ function Lightning() {
 	                $HEIGHT $WIDTH $CHOICE_HEIGHT \
 					Backup "current cursor" \
 					Restore "backup" \
-					"${W[@]}" 3>&2 2>&1 1>&3); Return=$?
-		case $CHOICE in 
-            Backup)Backup;;	
-			Restore)Restore;;
-			
-			*)
-				case $Return in
+					"${W[@]}" 3>&2 2>&1 1>&3)
+					
+				case $? in
 				    0)
 					cd $filesdir
-					cname="$(ls -1 $PWD | grep -v 'cursor.backup' | sed -n "$CHOICE p")"
+					cname="$(ls -1 $PWD | sed -n "$CHOICE p")"
 					cd "$(readlink -f "$cname")"
 					Cursor
 				    ;;
 					
 					3)exit;;
 				esac
-			;;
+		case $CHOICE in 
+            Backup)Backup;;	
+			Restore)Restore;;
 		esac
 	
 	
@@ -143,7 +146,8 @@ function Lightning() {
 }
 
 function Updater() {
-dialog --msgbox "Go to https://github.com/Xtr126/CursorChangerGearlock" 7 45
+dialog --msgbox "Go to 
+https://github.com/Xtr126/CursorChangerGearlock" 7 55
 }
 
 
