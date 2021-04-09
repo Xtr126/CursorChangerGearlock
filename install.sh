@@ -11,10 +11,11 @@ check_compat 7.2.22
 # Ensure compatible GearLock version
 
 geco "==== Cursor pack by Xtr, \n
-Special Thanks to my friends who supported in the creation of this\n
+Special Thanks to my friends who supported in the creation of this
 Download previous version for boot animations, only cursors are in this, to make it lightweight
-NM AKSHAR Gave me 7 cursors\n
+NM AKSHAR Gave me 7 cursors
 Devplayz gave 6 cursors
-LIGHTNING283 gave me 4 cursors\n
-==== Use it from gearlock> run gearlock extensions\n
+LIGHTNING283 gave me 4 cursors
+Developed with hours of patience by Xtr\n
+==== Use it from gearlock> run gearlock extensions
 ==== Use it from gearlock extensions menu after installation, enjoy!"
