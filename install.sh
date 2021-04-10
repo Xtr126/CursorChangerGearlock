@@ -19,3 +19,4 @@ LIGHTNING283 gave me 4 cursors
 Developed with hours of patience by Xtr\n
 ==== Use it from gearlock> run gearlock extensions
 ==== Use it from gearlock extensions menu after installation, enjoy!"
+rm -rf $DEPDIR/cursorpack
