@@ -1,6 +1,7 @@
-startdir=/home/xtr
+startdir=/sdcard
 filext='.png'
 menutitle="Cursor $filext Selection Menu"
+
 
 #------------------------------------------------------------------------------
 function Filebrowser()
