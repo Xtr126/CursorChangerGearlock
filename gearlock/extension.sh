@@ -1,5 +1,4 @@
 #!/gearlock/bin/bash
-
 filesdir="$DEPDIR/cursorpack"
 
 function Cursor() {
@@ -7,19 +6,23 @@ function Cursor() {
 		dialog --title "Applying cursor" --clear --msgbox \
 		"Ready to patch /system/framework/framework-res.apk with new cursor from $PWD
 		Press enter to start the process or press ctrl+c twice to cancel" 10 60
-		# framework-res upgrade		
+	
 		(pv -n /system/framework/framework-res.apk > /sdcard/framework-res.apk) 2>&1 | \
 		dialog --title "Preparing system framework" --gauge \
 		"Making a copy of /system/framework/framework-res.apk" 8 60; sleep 1
+
 		Pcp; sleep 1
 		cd /sdcard/
+
 		7z a framework-res.apk res/ | \
 		dialog --title "Cursor installation" \
 		--progressbox "Patching framework-res.apk with new cursors" 15 60
+
 		sleep 2
 		(pv -n framework-res.apk > /system/framework/framework-res.apk) 2>&1 | \
 		dialog --title "Cursor installation" --gauge \
 		"Installing patched system framework" 7 45; sleep 1
+
 		chmod 644 /system/framework/framework-res.apk  
 		stop; start
 		Loader
@@ -116,16 +119,21 @@ function Lightning() {
 					--cancel-label "$CANCEL" \
 	                --menu "$MENU" \
 	                $HEIGHT $WIDTH $CHOICE_HEIGHT \
-					Backup "current cursor" \
-					Restore "backup" \
+					a "Backup current cursor" \
+					b "Restore backup" \
+					c "Remove cursors" \
 					"${W[@]}" 3>&2 2>&1 1>&3); RETX=$?
 				
 	
 					
 				case $RETX in
 				    0)case $CHOICE in 
-						Backup)Backup;;	
-						Restore)Restore;;
+						a)Backup;;	
+						b)Restore;;
+						c)dialog --msgbox "Open FX File manager, open system (root)
+						Then go to 
+						$filesdir 
+						and remove cursors" 10 50; exit;;
 						*)
 							cd $filesdir
 							cname="$(ls -1 $PWD | sed -n "$CHOICE p")"
@@ -165,11 +173,7 @@ do
 cat <<EOF
 XXX
 $PCT
-┌──────────────────────────────────────────┐
-│ ┏━━‎╻ ╻‎╻━╻ ┏━━ ┏━┓‎╻━╻ ‎ ┏━┓ ╻━╻ ┏━━ ╻
-│ ┃ ‎ ┃ ┃‎┃━┃ ┗━━ ┃ ┃‎┃━┃ ‎ ┃━┛ ┃━┃ ┃ ‎ ┃/
-│ ┗━━‎╹━╹‎┃ \ ━━╹ ┗━┛‎┃ \\ ‎ ┃ ‎ ┃ ┃ ┗━━ ┃⟍⟍
-└──────────────────────────────────────────┘
+$(figlet cursorpack)
 . . Xtr LIGHTNING ilhan NM_AKSHAR Devplayz  //
 XXX
 EOF
@@ -178,10 +182,9 @@ sleep 0.05
 done
 ) |
 
-dialog "$@" --gauge "Hi, thanks" 11 50 0; sleep 0.5
+dialog "$@" --gauge "Hi, thanks" 12 60 0; sleep 0.5
 check
 }
-
 
 
 Loader
