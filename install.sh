@@ -10,13 +10,18 @@ check_compat 7.2.22
 
 # Ensure compatible GearLock version
 
-geco "==== Cursor pack by Xtr, \n
-Special Thanks to my friends who supported in the creation of this
+geco "==== Cursor pack ====
+
 Download previous version for boot animations, only cursors are in this, to make it lightweight
-NM AKSHAR Gave me 7 cursors
-Devplayz gave 6 cursors
-LIGHTNING283 gave me 4 cursors
-Developed with hours of patience by Xtr\n
-==== Use it from gearlock> run gearlock extensions
-==== Use it from gearlock extensions menu after installation, enjoy!"
+
+Credits:
+NM AKSHAR - 7 cursors
+Devplayz - 6 cursors
+LIGHTNING283 - 4 cursors
+TukangM - Default Android Stock cursor
+
+==== Use it from gearlock > run gearlock extensions
+==== Use it from gearlock extensions menu after installation, enjoy!
+"
+
 rm -rf $DEPDIR/cursorpack

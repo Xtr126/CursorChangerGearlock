@@ -10,9 +10,9 @@ TYPE="Extension" #Specify (Package / Extension)
 
 AUTHOR="Xtr" #Your name as the Developer/Owner/Packer
 
-VERSION="1.0" #Specify the Version of this package/extension
+VERSION="1.1" #Specify the Version of this package/extension
 
-SHORTDESC="Took me (Xtr) countless hours to make this, thanks to,Lightning,DevPlayz,NM-AKSHAR who supported by giving cursors" #Provide a short description about this package/extension
+SHORTDESC="A gearlock package to help modify the system cursor/mouse pointer" #Provide a short description about this package/extension
 
 C_EXTNAME="CursorPack" #For Specifing a custom name for your extension script ($NAME is used if not defined)
 
