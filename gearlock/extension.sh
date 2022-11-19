@@ -29,7 +29,7 @@ apply_cursor() {
 				  XXX"
 			cp $f $DEST &>/dev/null
 		done
-		)
+	)
 
 	cd /sdcard
 
@@ -76,10 +76,17 @@ backup_system_framework() {
 check_os() {
 	if ! grep -iq 'darkmatter\|ro.bliss.version=11' "$SYSTEM_DIR/build.prop"; then
 		dialog --title "Warning" --clear --msgbox "We have found you are not using DarkMatter or Bliss OS 11.13
-		To change cursor we have to modify system ui app framework-res.apk, I have tested only on Bliss OS 11.13 and Phoenix OS darkmatter.
+		To change cursor we have to modify system file framework-res.apk, I have tested only on Bliss OS 11.13 and Phoenix OS darkmatter.
 		Consider making a backup before proceeding." 10 55
 	fi
-	[ ! -f /data/cursor.backup ] && dialog --msgbox "Warning: No backup found!" 5 40
+
+	[ ! -f /data/cursor.backup ] && \
+	if (dialog --title "Warning: No backup found!" \
+	           --yes-label "Yes" --no-label "No" \
+	  --yesno "Do you want to save a backup of
+	          /system/framework/framework-res.apk ?" 7 45); then
+    backup_system_framework
+  fi
 	main_menu
 }
 
@@ -90,10 +97,10 @@ main_menu() {
 	CHOICE_HEIGHT=23
 	BACKTITLE=$(gecpc "By SupremeGamers" "_")
 	EXTRA="Exit"
-	CANCEL="Add/Update"
-	OKB="Choose"
+	CANCEL="Add Cursors"
+	OKB="Select"
 	TITLE="CursorChangerGearlock"
-	MENU="Select a cursor from list"
+	MENU="Select a cursor to apply"
 	let i=0 # define counting variable
 	W=() # define working array
 	while read -r line; do # process file by file
@@ -150,7 +157,7 @@ dialog_gauge_progress_bar() {
 			let "counter = counter + 5"
 			sleep 0.05
 		done
-	) | dialog --no-collapse --gauge "init" 14 60 0; sleep 0.5
+	) | dialog --no-collapse --gauge "initializing.." 12 60 0; sleep 0.5
 check_os
 }
 
