@@ -9,10 +9,11 @@ apply_cursor() {
 
 	(pv -n /system/framework/framework-res.apk > /sdcard/framework-res.apk) 2>&1 | \
 	dialog --title "Preparing system framework" --gauge \
-	"Making a copy of /system/framework/framework-res.apk" 8 60; sleep 1
+	"Making a copy of /system/framework/framework-res.apk" 8 60
 
 	DIRS=( $(ls) )
-	DEST="/sdcard/res/drawable-mdpi-v4/"
+	DEST="/sdcard/res/drawable-mdpi-v4"
+
 	[ ! -d $DEST ] && mkdir -p $DEST
 
 	dialog --gauge "Loading cursor files" 8 55 < <(
@@ -26,46 +27,49 @@ apply_cursor() {
 				  $PCT
 				  Loading $f...
 				  XXX"
-			# copy file $f to $DEST
-			cp $f ${DEST} &>/dev/null
+			cp $f $DEST &>/dev/null
 		done
 		)
 
-	sleep 1
-	cd /sdcard/
+	cd /sdcard
 
 	7z a framework-res.apk res/ | \
 	dialog --title "Cursor installation" \
-	--progressbox "Patching framework-res.apk with new cursors" 15 60
+	       --progressbox "Patching framework-res.apk with new cursors" 15 60
 
-	sleep 2
 	(pv -n framework-res.apk > /system/framework/framework-res.apk) 2>&1 | \
 	dialog --title "Cursor installation" --gauge \
-	"Installing patched system framework" 7 45; sleep 1
+	"Installing patched system framework" 7 45
 
 	chmod 644 /system/framework/framework-res.apk  
-	stop; start
+	load_cursor
 	dialog_gauge_progress_bar
 }
 
-Restore() {
+restore_cursor() {
 
 	dialog --title "Restoring" --clear --msgbox "Restoring backup, make sure you had an backup" 7 45
-	# Backup boot animation
-	[ ! -f /data/cursor.backup ] && dialog --msgbox "No backup found.\nChoose backup from the menu first!" 10 50 && dialog_gauge_progress_bar
-	
-			cat /data/cursor.backup > /system/framework/framework-res.apk
-			chmod 644 /system/framework/framework-res.apk
-			stop; start
+
+	if [ ! -f /data/cursor.backup ]; then 
+		dialog --msgbox "No backup found.\nChoose backup from the menu first!" 10 50 
 		dialog_gauge_progress_bar
-	
-	
+	fi
+
+	cp /data/cursor.backup /system/framework/framework-res.apk
+	chmod 644 /system/framework/framework-res.apk
+
+	load_cursor
+	dialog_gauge_progress_bar
+}
+
+load_cursor() {
+  pkill com.android.systemui
 }
 
 backup_system_framework() {
 	dialog --title "Backup" --clear --msgbox "Saving /system/framework/framework-res.apk as /data/cursor.backup" 7 45
 	# Backup cursor
-	cat /system/framework/framework-res.apk > /data/cursor.backup
+	cp -a /system/framework/framework-res.apk /data/cursor.backup
 	dialog_gauge_progress_bar
 }
 
@@ -76,11 +80,11 @@ check_os() {
 		Consider making a backup before proceeding." 10 55
 	fi
 	[ ! -f /data/cursor.backup ] && dialog --msgbox "Warning: No backup found!" 5 40
-	MainMenu
+	main_menu
 }
 
 
-MainMenu() {
+main_menu() {
 	HEIGHT=20
 	WIDTH=60
 	CHOICE_HEIGHT=23
@@ -107,12 +111,12 @@ MainMenu() {
 					a "Backup current cursor" \
 					b "Restore backup" \
 					c "Remove cursors" \
-					"${W[@]}" 3>&2 2>&1 1>&3); RETX=$?
+					"${W[@]}" 3>&2 2>&1 1>&3);
 
-	case $RETX in
+	case $? in
 		0)case $CHOICE in
 			a) backup_system_framework;;
-			b) Restore;;
+			b) restore_cursor;;
 			c) dialog --msgbox "Open FX File manager, open system (root)
 								Then go to
 								$filesdir
@@ -129,22 +133,9 @@ MainMenu() {
 		3) exit;;
 
 	esac
-
-	if (dialog --title "Add nice cursors" --yes-label "Add cursors" --no-label "Update from internet"  --yesno "You can 		add cursors from local file or fetch latest cursor list from github Xtr126/CursorChangerGearlock
-		Only png format supported. Must be connected to the internet for update to work." 9 55); then
-		source $DEPDIR/filebrowse.sh
-	else
-		Updater
-	fi
-
+	source $DEPDIR/filebrowse.sh
 	dialog_gauge_progress_bar
 }
-
-Updater() {
-dialog --msgbox "Go to 
-https://github.com/Xtr126/CursorChangerGearlock/releases" 7 55
-}
-
 
 dialog_gauge_progress_bar() {
 	local counter=0
@@ -159,7 +150,7 @@ dialog_gauge_progress_bar() {
 			let "counter = counter + 5"
 			sleep 0.05
 		done
-	) | dialog "$@" --gauge "stub" 12 60 0; sleep 0.5
+	) | dialog --no-collapse --gauge "init" 14 60 0; sleep 0.5
 check_os
 }
 

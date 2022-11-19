@@ -6,11 +6,11 @@ NAME="Cursor pack" #Package/Extension Name
 
 CODENAME="cursor-changer" #An Unique codename
 
-TYPE="Extension" #Specify (Package / Extension)
+TYPE="Package" #Specify (Package / Extension)
 
 AUTHOR="Xtr" #Your name as the Developer/Owner/Packer
 
-VERSION="1.1" #Specify the Version of this package/extension
+VERSION="1.1.1" #Specify the Version of this package/extension
 
 SHORTDESC="A gearlock package to help modify the system cursor/mouse pointer" #Provide a short description about this package/extension
 
