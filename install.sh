@@ -23,5 +23,3 @@ TukangM - Default Android Stock cursor
 ==== Use it from gearlock > run gearlock extensions
 ==== Use it from gearlock extensions menu after installation, enjoy!
 "
-
-rm -rf $DEPDIR/cursorpack
