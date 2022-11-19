@@ -11,25 +11,12 @@ apply_cursor() {
 	dialog --title "Preparing system framework" --gauge \
 	"Making a copy of /system/framework/framework-res.apk" 8 60
 
-	DIRS=( $(ls) )
-	DEST="/sdcard/res/drawable-mdpi-v4"
 
-	[ ! -d $DEST ] && mkdir -p $DEST
+	destination_dir="/sdcard/res/drawable-mdpi-v4"
+	[ ! -d $destination_dir ] && mkdir -p $destination_dir
 
-	dialog --gauge "Loading cursor files" 8 55 < <(
-		n=${#DIRS[*]};
-		i=0
-		for f in "${DIRS[@]}"; do
-			# calculate progress
-			PCT=$(( 100*(++i)/n ))
-			# update dialog box
-			echo "XXX
-				  $PCT
-				  Loading $f...
-				  XXX"
-			cp $f $DEST &>/dev/null
-		done
-	)
+  files="$(ls)"
+	copy_files $destination_dir $files | dialog --gauge "Loading cursor files" 8 55
 
 	cd /sdcard
 
@@ -41,17 +28,33 @@ apply_cursor() {
 	dialog --title "Cursor installation" --gauge \
 	"Installing patched system framework" 7 45
 
-	chmod 644 /system/framework/framework-res.apk  
+	chmod 644 /system/framework/framework-res.apk
 	load_cursor
 	dialog_gauge_progress_bar
+}
+
+copy_files() {
+  destination_dir=$1
+  shift 1
+  i=0
+  for file in "${files[@]}"; do
+    # calculate progress
+    PCT=$(( 100*(++i)/n ))
+    # update dialog box
+    echo "XXX
+        $PCT
+        Loading $file...
+        XXX"
+    cp $file $destination_dir &>/dev/null
+  done
 }
 
 restore_cursor() {
 
 	dialog --title "Restoring" --clear --msgbox "Restoring backup, make sure you had an backup" 7 45
 
-	if [ ! -f /data/cursor.backup ]; then 
-		dialog --msgbox "No backup found.\nChoose backup from the menu first!" 10 50 
+	if [ ! -f /data/cursor.backup ]; then
+		dialog --msgbox "No backup found.\nChoose backup from the menu first!" 10 50
 		dialog_gauge_progress_bar
 	fi
 
@@ -121,7 +124,7 @@ main_menu() {
 					"${W[@]}" 3>&2 2>&1 1>&3);
 
 	case $? in
-		0)case $CHOICE in
+		0) case $CHOICE in
 			a) backup_system_framework;;
 			b) restore_cursor;;
 			c) dialog --msgbox "Open FX File manager, open system (root)
@@ -152,7 +155,7 @@ dialog_gauge_progress_bar() {
 			echo XXX
 			echo $counter
 			echo "$banner"
-			echo ". . Xtr lightning MrMiy4mo NM_AKSHAR DevPlayz TukangM //"
+			echo ". . Xtr lightning MrMiy4mo NM AKSHAR DevPlayz TukangM //"
 			echo XXX
 			let "counter = counter + 5"
 			sleep 0.05

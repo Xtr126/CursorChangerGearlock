@@ -70,7 +70,7 @@ Filebrowser "$menutitle" "$startdir"
 exitstatus=$?
 if [ $exitstatus -eq 0 ]; then
     if [ "$selection" == "" ]; then
-		Loader
+		dialog_gauge_progress_bar
     else
 	
 		let i=0 # define counting variable
@@ -92,7 +92,7 @@ if [ $exitstatus -eq 0 ]; then
 		 	"Enter the name to be displayed in cursor selection menu" 9 45 3>&2 2>&1 1>&3)
 		 	mkdir $filesdir/"$user_input"
 		 	cat $filepath/$filename > $filesdir/"$user_input"/$CHOICE
-		 	Loader
+		 	dialog_gauge_progress_bar
 		 else
 
 			dialog --title "Applying cursor" --clear --msgbox \
@@ -116,8 +116,8 @@ if [ $exitstatus -eq 0 ]; then
 			chmod 644 /system/framework/framework-res.apk  
 			
 			stop; start
-			Loader
+			dialog_gauge_progress_bar
 		fi
 	fi
 fi
-Loader
+dialog_gauge_progress_bar
