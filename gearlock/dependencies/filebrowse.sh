@@ -66,19 +66,17 @@ function Filebrowser()
 
 
 Filebrowser "$menutitle" "$startdir"
-
 exitstatus=$?
-if [ $exitstatus -eq 0 ]; then
-    if [ "$selection" == "" ]; then
-		dialog_gauge_progress_bar
-    else
-	
+
+if [[ $exitstatus -eq 0 && "$selection" != "" ]]; then
+
 		let i=0 # define counting variable
 		OPTIONS=() # define working array
 		while read -r line; do # process file by file
-		let i=$i+1
-		OPTIONS+=("$line" $i)
-		done < <( ls $filesdir/evolution/ )
+      let i=$i+1
+      OPTIONS+=("$line" $i)
+		done < <( ls $filesdir/evolution/ ) # sample
+
 		TITLE="Which type of cursor is this?"
 		MENU="21 types of cursors available, choose what you want"
 		CHOICE=$(dialog --clear --cancel-label "Exit" \
@@ -86,38 +84,43 @@ if [ $exitstatus -eq 0 ]; then
 	                --menu "$MENU" \
 	                $HEIGHT $WIDTH $CHOICE_HEIGHT \
 	                "${OPTIONS[@]}" 2>&1 >/dev/tty)
-    	 if (dialog --yes-label "Add" --no-label "Try" --yesno \
-		 	"Do you want to add the cursor to the cursor selection menu or try the cursor for now?" 7 45); then
-		 	user_input=$(dialog --title "Enter name" --inputbox \
-		 	"Enter the name to be displayed in cursor selection menu" 9 45 3>&2 2>&1 1>&3)
-		 	mkdir $filesdir/"$user_input"
-		 	cat $filepath/$filename > $filesdir/"$user_input"/$CHOICE
-		 	dialog_gauge_progress_bar
-		 else
+   if (dialog --yes-label "Add" --no-label "Try" --yesno \
+                "Do you want to add the cursor to the cursor selection menu
+                or try the cursor for now?" 7 45); then
 
+        user_input=$(dialog --title "Enter name" --inputbox \
+        "Enter the name to be displayed in cursor selection menu" 9 45 3>&2 2>&1 1>&3)
+        mkdir $filesdir/"$user_input"
+        cp $filepath/$filename $filesdir/"$user_input"/$CHOICE
+        dialog_gauge_progress_bar
+
+   else
 			dialog --title "Applying cursor" --clear --msgbox \
 			"Ready to patch /system/framework/framework-res.apk with new cursor from $filepath/$filename
 			Press enter to start the process or press ctrl+c twice to cancel" 10 60
-			# framework-res upgrade		
+
 			(pv -n /system/framework/framework-res.apk > /sdcard/framework-res.apk) 2>&1 | \
 			dialog --title "Preparing system framework" --gauge \
-			"Making a copy of /system/framework/framework-res.apk" 8 60; sleep 1
-			mkdir -p /sdcard/res/drawable-mdpi-v4/
-			
-			cd /sdcard/
-			cat $filepath/$filename > /sdcard/res/drawable-mdpi-v4/$CHOICE
+			"Making a copy of /system/framework/framework-res.apk" 8 60
+
+			destination_dir="/sdcard/res/drawable-mdpi-v4"
+      [ ! -d $destination_dir ] && mkdir -p $destination_dir
+
+			cd /sdcard
+			cp $filepath/$filename /sdcard/res/drawable-mdpi-v4/$CHOICE
 			
 			7z a framework-res.apk res/ | \
-			dialog --title "Cursor installation" --progressbox "Patching framework-res.apk with new cursor" 15 60; sleep 2
+			dialog --title "Cursor installation" \
+			       --progressbox "Patching framework-res.apk with new cursor" 15 60
 			
 			(pv -n framework-res.apk > /system/framework/framework-res.apk) 2>&1 | \
-			dialog --title "Cursor installation" --gauge "Installing patched system framework" 7 45; sleep 1
+			dialog --title "Cursor installation" --gauge \
+			"Installing patched system framework" 7 45
 			
-			chmod 644 /system/framework/framework-res.apk  
-			
-			stop; start
+			chmod 644 /system/framework/framework-res.apk
+			load_cursor
 			dialog_gauge_progress_bar
 		fi
-	fi
 fi
+
 dialog_gauge_progress_bar
